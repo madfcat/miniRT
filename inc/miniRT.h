@@ -130,5 +130,6 @@ t_vec3			ray_at(t_ray r, double t);
 
 // double			hit_sphere(const t_vec3 center, double radius, const t_ray r);
 bool hit_sphere(const t_sphere sphere, const t_ray r, double ray_tmin, double ray_tmax, t_hit *rec);
+bool hit(const t_ray r, double ray_tmin, double ray_tmax, t_hit *rec, t_vector spheres_vector);
 
 #endif

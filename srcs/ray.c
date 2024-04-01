@@ -42,11 +42,17 @@ t_color	ray_color(t_master *m, t_ray r)
 	t_vec3	unit_direction;
 	double	a;
 	t_color	ret;
-	double t;
-	t_vec3 n;
+	// double t;
+	// t_vec3 n;
+	t_hit	rec;
+
+	if (hit(r, 0.0, INFINITY, &rec, m->sphere_vector))
+	{
+		return (vec3_plus_vec3(rec.normal, init_vec3(1, 1, 1)));
+	}
 
 
-	t_sphere sphere = ((t_sphere *)m->sphere_vector.data)[0];
+/* 	t_sphere sphere = ((t_sphere *)m->sphere_vector.data)[0];
 
 	(void)m;
 	t_hit rec;
@@ -59,7 +65,7 @@ t_color	ray_color(t_master *m, t_ray r)
 	{
 		n = unit_vector(vec3_minus_vec3(ray_at(r, t), sphere.center));
 		return vec3_times_d(init_vec3(n.x + 1, n.y + 1, n.z + 1), 0.33);
-	}
+	} */
 	unit_direction = unit_vector(r.direction);
 	a = 0.5 * (unit_direction.y + 1.0);
 	ret = vec3_plus_vec3(vec3_times_d(init_vec3(1.0, 1.0, 1.0), 1.0 - a),

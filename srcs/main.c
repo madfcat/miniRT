@@ -99,9 +99,8 @@ int	main(void)
 	push_back(&(m.sphere_vector), &first_sphere);
 	// ((t_sphere *)m.sphere_vector.data)[m.sphere_vector.size++] = first_sphere;
 
-	second_sphere.center = init_vec3(0, 0, -1.5);
-	second_sphere.radius = 0.5;
-	init_spheres(&m, 20);
+	second_sphere.center = init_vec3(0, -100.5, -1);
+	second_sphere.radius = 100;
 	push_back(&(m.sphere_vector), &second_sphere);
 
 	render(&m);
