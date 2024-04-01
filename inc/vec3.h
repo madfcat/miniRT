@@ -11,6 +11,7 @@ typedef struct s_vec3
 }	t_vec3;
 
 typedef t_vec3 t_color;
+typedef t_vec3 t_point3;
 
 t_vec3	vec3_plus_vec3(t_vec3 u, t_vec3 v);
 t_vec3	vec3_minus_vec3(t_vec3 u, t_vec3 v);

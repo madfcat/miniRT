@@ -1,16 +1,16 @@
 NAME = miniRT
 
-LIBFT = ./libft/libft.a
-
 LIBMLX = ./MLX42
 
-MLX = $(LIBMLX)/build/libmlx42.a -Iinclude -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/" -L/usr/loca/Cellar/glfw/lib/
+MLX = $(LIBMLX)/build/libmlx42.a -Iinclude -lglfw -L/opt/homebrew/Cellar/glfw/3.4/lib/
+# MLX = $(LIBMLX)/build/libmlx42.a -Iinclude -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/" -L/opt/homebrew/Cellar/glfw/3.4/lib/
+#-L/usr/loca/Cellar/glfw/lib/
 
-LIBS = $(LIBFT) $(MLX)
+LIBS = $(MLX)
 
-INCLUDES = -I ./inc/ -I $(LIBMLX)/include/MLX42 -I ./libft/
+INCLUDES = -I ./inc/ -I $(LIBMLX)/include/MLX42
 
-SRCS = $(addprefix srcs/, main.c ray.c vec3a.c vec3b.c vec3c.c sphere.c)
+SRCS = $(addprefix srcs/, hit.c main.c utilities.c ray.c vec3a.c vec3b.c vec3c.c vector_array.c )
 
 OBJS = $(SRCS:.c=.o)
 
@@ -23,20 +23,15 @@ libmlx:
 
 $(OBJS): $(SRCS)
 
-$(NAME): $(OBJS) $(LIBFT)
+$(NAME): $(OBJS)
 	$(CC) $(OBJS) $(LIBS) -o $(NAME)
-
-$(LIBFT):
-	make -C ./libft/
 
 clean:
 	rm -rf $(OBJS)
-	make clean -C ./libft/
 	rm -rf $(LIBMLX)/build
 
 fclean: clean
 	rm -rf $(NAME)
-	make fclean -C ./libft/
 
 re: fclean all
 

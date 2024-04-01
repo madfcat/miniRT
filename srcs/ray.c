@@ -1,6 +1,6 @@
 #include "miniRT.h"
 
-t_vec3	ray_at(t_ray r, double t)
+t_point3	ray_at(t_ray r, double t)
 {
 	return (vec3_plus_vec3(r.origin, vec3_times_d(r.direction, t)));
 }
@@ -20,23 +20,46 @@ unsigned int	color_to_rgba(t_color c)
 		| lround(c.z * 255) << 8 | 255);
 }
 
+// double hit_sphere(const t_vec3 center, double radius, const t_ray r)
+// {
+// 	double	a;
+// 	double	half_b;
+// 	double	c;
+// 	double	discriminant;
+
+// 	t_vec3 oc = vec3_minus_vec3(r.origin, center);
+// 	a = vec3length_squared(r.direction);
+// 	half_b = dot(oc, r.direction);
+// 	c = vec3length_squared(oc) - radius * radius;
+// 	discriminant = half_b * half_b - a * c;
+// 	if (discriminant < 0)
+// 		return (-1.0);
+// 	return ((-half_b - sqrt(discriminant)) / a);
+// }
+
 t_color	ray_color(t_master *m, t_ray r)
 {
 	t_vec3	unit_direction;
 	double	a;
 	t_color	ret;
-	double	t;
-	t_vec3	normal;
+	double t;
+	t_vec3 n;
 
-	t = hit_sphere(init_vec3(0, 0, -1), 0.5, r);
+
+	t_sphere sphere = ((t_sphere *)m->sphere_vector.data)[0];
+
+	(void)m;
+	t_hit rec;
+
+	// t = hit_sphere(m->spheres[0], r, 0.0, INFINITY, &rec);
+	t = hit_sphere(sphere, r, 0.0, INFINITY, &rec);
+	// t = hit_sphere(m->spheres[0], 0.5, r, &rec);
+
 	if (t > 0.0)
 	{
-		normal = unit_vector(vec3_minus_vec3(ray_at(r, t),
-					init_vec3(0, 0, -1)));
-		return (vec3_times_d(init_vec3(normal.x
-					+ 1, normal.y + 1, normal.z + 1), 0.5));
+		n = unit_vector(vec3_minus_vec3(ray_at(r, t), sphere.center));
+		return vec3_times_d(init_vec3(n.x + 1, n.y + 1, n.z + 1), 0.33);
 	}
-	(void)m;
 	unit_direction = unit_vector(r.direction);
 	a = 0.5 * (unit_direction.y + 1.0);
 	ret = vec3_plus_vec3(vec3_times_d(init_vec3(1.0, 1.0, 1.0), 1.0 - a),

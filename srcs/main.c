@@ -78,9 +78,31 @@ int	render(t_master *m)
 	return (0);
 }
 
+void	init_spheres(t_master *m, int size)
+{
+	// m->spheres = (t_sphere *)malloc(size * sizeof(t_sphere));
+	(m->sphere_vector).data = (t_sphere *)malloc(size * sizeof(t_sphere));
+	// m->spheres = (&(m->sphere_vector))->data;
+	(&(m->sphere_vector))->size = 0;
+	(&(m->sphere_vector))->element_size = sizeof(t_sphere);
+}
+
 int	main(void)
 {
 	t_master	m;
+	t_sphere	first_sphere;
+	t_sphere	second_sphere;
+
+	first_sphere.center = init_vec3(0, 0, -1.0);
+	first_sphere.radius = 0.5;
+	init_spheres(&m, 20);
+	push_back(&(m.sphere_vector), &first_sphere);
+	// ((t_sphere *)m.sphere_vector.data)[m.sphere_vector.size++] = first_sphere;
+
+	second_sphere.center = init_vec3(0, 0, -1.5);
+	second_sphere.radius = 0.5;
+	init_spheres(&m, 20);
+	push_back(&(m.sphere_vector), &second_sphere);
 
 	render(&m);
 	return (0);
