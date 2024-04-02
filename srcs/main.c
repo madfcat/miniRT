@@ -69,7 +69,7 @@ void	make_image(t_master *m, mlx_image_t *img)
 	int			i;
 	int			j;
 	int   		sample;
-	int    		samples_per_pixel = 100;
+	int    		samples_per_pixel = 300;
 	t_color 	pixel_color;
 
 
@@ -78,6 +78,8 @@ void	make_image(t_master *m, mlx_image_t *img)
 	j = 0;
 	while (i < WHEIGHT)
 	{
+		if (i % 100 == 0)
+			printf("X");
 		while (j < WWIDTH)
 		{
 			pixel_color = init_vec3(0, 0, 0);

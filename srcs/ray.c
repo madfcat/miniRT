@@ -30,9 +30,13 @@ t_color	ray_color(t_master *m, t_ray *r)
 	t_color	ret;
 	t_hit	rec;
 
+
 	if (hit(r, create_interval(0.0, INFINITY), &rec, m->sphere_vector))
 	{
-		return (vec3_times_d(vec3_plus_vec3(rec.normal, init_vec3(1, 1, 1)), 0.5));
+		t_vec3 direction = random_on_hemisphere(&rec.normal);
+		t_ray ray = init_ray(rec.p, direction);
+		return (vec3_times_d(ray_color(m, &ray), 0.5));
+		// return (vec3_times_d(vec3_plus_vec3(rec.normal, init_vec3(1, 1, 1)), 0.5));
 	}
 	unit_direction = unit_vector(r->direction);
 	a = 0.5 * (unit_direction.y + 1.0);

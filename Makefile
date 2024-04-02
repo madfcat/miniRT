@@ -16,6 +16,7 @@ SRCS = $(addprefix srcs/, \
 	main.c \
 	utilities.c \
 	ray.c \
+	sphere_diffuse.c \
 	vec3a.c \
 	vec3b.c \
 	vec3c.c \

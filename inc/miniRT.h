@@ -64,6 +64,7 @@ double	vec3length(t_vec3 u);
 double	vec3length_squared(t_vec3 u);
 double	dot(t_vec3 u, t_vec3 v);
 t_vec3	init_vec3(double x, double y, double z);
+t_vec3	random_vec3();
 
 /*miniRT*/
 
@@ -102,14 +103,17 @@ typedef struct s_hit
 	bool		front_face;
 }	t_hit;
 
+/* Sphere */
+
 typedef struct s_sphere
 {
 	unsigned int	object_index;
 	t_point3		center;
-	// t_vec3			origin;
 	double			radius;
 	t_color			color;
 }	t_sphere;
+
+t_vec3	random_on_hemisphere(t_vec3 *normal);
 
 typedef struct s_plane
 {
