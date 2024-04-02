@@ -1,14 +1,4 @@
 #include "miniRT.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h> // change this to libft to use memcpy
-
-/* typedef struct s_vector
-{
-	void* data;		 // Pointer to dynamically allocated array
-	int size;		// Number of elements currently in the vector
-	int element_size; // Size of each element in bytes
-} t_vector; */
 
 void init_vector(t_vector *vec, int initial_capacity, int element_size)
 {

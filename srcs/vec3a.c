@@ -1,4 +1,4 @@
-#include "vec3.h"
+#include "miniRT.h"
 
 t_vec3	vec3_plus_vec3(t_vec3 u, t_vec3 v)
 {

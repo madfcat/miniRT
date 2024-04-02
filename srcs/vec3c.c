@@ -1,4 +1,4 @@
-#include "vec3.h"
+#include "miniRT.h"
 
 double dot(const t_vec3 u, const t_vec3 v)
 {

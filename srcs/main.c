@@ -1,5 +1,4 @@
 #include "miniRT.h"
-#include "vec3.h"
 
 int	ft_error(void)
 {
@@ -7,14 +6,14 @@ int	ft_error(void)
 }
 // TODO: calculate focal_length from FOV angle
 
-void	calculate_camera(t_camera *c,
+void	init_camera(t_camera *c,
 			double focal_length, double viewport_height)
 {
 	double	viewport_width;
 	t_vec3	viewport_upper_left;
 
-	focal_length = 1.0;
-	viewport_height = 2.0;
+	// focal_length = 1.0;
+	// viewport_height = 2.0;
 	viewport_width = viewport_height * (WWIDTH * 1.0) / (WHEIGHT * 1.0);
 	c->camera_center = init_vec3(0, 0, 0);
 	c->viewport_u = init_vec3(viewport_width, 0, 0);
@@ -32,25 +31,65 @@ void	calculate_camera(t_camera *c,
 					c->pixel_delta_u), 0.5));
 }
 
+/**
+ * Returns a random point in the square surrounding a pixel at the origin
+*/
+t_vec3	pixel_sample_square(t_camera *c)
+{
+	double	px;
+	double	py;
+
+	px = -0.5 + random_double();
+	py = -0.5 + random_double();
+	return (vec3_plus_vec3(vec3_times_d(c->pixel_delta_u, px), vec3_times_d(c->pixel_delta_v, py)));
+
+}
+/**
+ * Get a randomly sampled camera ray for the pixel at location j, i.
+*/
+t_ray	get_ray(int j, int i, t_camera *c)
+{
+	t_vec3		pixel_center;
+	t_vec3		pixel_sample;
+	t_ray		r;
+
+	pixel_center = vec3_plus_vec3(c->pixel00_loc, vec3_plus_vec3(vec3_times_d(c->pixel_delta_u, j * 1.0), vec3_times_d(c->pixel_delta_v, i * 1.0)));
+	pixel_sample = vec3_plus_vec3(pixel_center, pixel_sample_square(c));
+
+	r.origin = c->camera_center;
+	r.direction = vec3_minus_vec3(pixel_sample, r.origin);
+
+	return (r);
+}
+
 void	make_image(t_master *m, mlx_image_t *img)
 {
 	t_camera	c;
-	t_vec3		pixel_center;
 	t_ray		r;
 	int			i;
 	int			j;
+	int   		sample;
+	int    		samples_per_pixel = 100;
+	t_color 	pixel_color;
 
-	calculate_camera(&c, 1.0, 2.0);
+
+	init_camera(&c, 1.0, 2.0);
 	i = 0;
 	j = 0;
 	while (i < WHEIGHT)
 	{
 		while (j < WWIDTH)
 		{
-			pixel_center = vec3_plus_vec3(c.pixel00_loc, vec3_plus_vec3(vec3_times_d(c.pixel_delta_u, j * 1.0), vec3_times_d(c.pixel_delta_v, i * 1.0)));
-			r.origin = c.camera_center;
-			r.direction = vec3_minus_vec3(pixel_center, c.camera_center);
-			mlx_put_pixel(img, j, i, color_to_rgba(ray_color(m, r)));
+			pixel_color = init_vec3(0, 0, 0);
+			sample = 0;
+			while (sample < samples_per_pixel)
+			{
+				r = get_ray(j, i, &c);
+				pixel_color = vec3_plus_vec3(pixel_color, ray_color(m, &r));
+				sample++;
+			}
+
+			mlx_put_pixel(img, j, i, color_to_rgba(pixel_color, samples_per_pixel));
 			j++;
 		}
 		i++;
@@ -77,7 +116,9 @@ int	render(t_master *m)
 	mlx_terminate(mlx);
 	return (0);
 }
-
+/**
+ * Initializes sphere_vector in the master struct
+*/
 void	init_spheres(t_master *m, int size)
 {
 	// m->spheres = (t_sphere *)malloc(size * sizeof(t_sphere));

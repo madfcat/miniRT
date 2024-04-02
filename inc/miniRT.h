@@ -2,37 +2,68 @@
 # define MINIRT_H
 
 # include "MLX42.h"
-# include "vec3.h"
 # include <math.h>
 # include <stdlib.h>
+# include <string.h> // change this to libft to use memcpy
 // TODO: remove this header
 # include <stdio.h>
 # define WWIDTH 1280
 # define WHEIGHT 720
 
+
 /* Utilities */
 # define PI 3.1415926535897932385
 
-/* Vector array */
-typedef struct s_sphere t_sphere;
+double	random_double();
 
-/* typedef struct s_sphere_vector
+/* Interval */
+
+typedef struct s_interval
 {
-	t_sphere* data;		 // Pointer to dynamically allocated array
-	int size;		// Number of elements currently in the vector
-	int element_size; // Size of each element in bytes
-} t_sphere_vector; */
+	double	min;
+	double	max;
+}	t_interval;
+
+t_interval	create_interval( double min, double max);
+bool		interval_surrounds(double x, t_interval interval);
+double		clamp(double x, t_interval interval);
+
+/* Vector Array */
 
 typedef struct s_vector
 {
-	void* data;		 // Pointer to dynamically allocated array
-	int size;		// Number of elements currently in the vector
-	int capacity;	// Number of elements the vector can store
-	int element_size; // Size of each element in bytes
-} t_vector;
+	void	*data;		// Pointer to dynamically allocated array
+	int		size;		// Number of elements currently in the vector
+	int		capacity;	// Number of elements the vector can store
+	int		element_size; // Size of each element in bytes
+}	t_vector;
 
 void push_back(t_vector *vec, void *value);
 void init_vector(t_vector *vec, int initial_size, int element_size);
+
+/* Vec3 */
+
+typedef struct s_vec3
+{
+	double	x;
+	double	y;
+	double	z;
+}	t_vec3;
+
+typedef t_vec3	t_color;
+typedef t_vec3	t_point3;
+
+t_vec3	vec3_plus_vec3(t_vec3 u, t_vec3 v);
+t_vec3	vec3_minus_vec3(t_vec3 u, t_vec3 v);
+t_vec3	vec3_times_vec3(t_vec3 u, t_vec3 v);
+t_vec3	vec3_times_d(t_vec3 u, double t);
+t_vec3	vec3_div_d(t_vec3 u, double t);
+t_vec3	cross(t_vec3 u, t_vec3 v);
+t_vec3	unit_vector(t_vec3 v);
+double	vec3length(t_vec3 u);
+double	vec3length_squared(t_vec3 u);
+double	dot(t_vec3 u, t_vec3 v);
+t_vec3	init_vec3(double x, double y, double z);
 
 /*miniRT*/
 
@@ -117,18 +148,20 @@ typedef struct s_master
 	t_cylinder	*cylinders;
 }	t_master;
 
+/* Ray */
+
 typedef struct s_ray
 {
 	t_vec3	origin;
 	t_vec3	direction;
-}	t_ray;
+} t_ray;
 
 t_ray			init_ray(t_vec3 origin, t_vec3 direction);
-unsigned int	color_to_rgba(t_color c);
-t_color			ray_color(t_master *m, t_ray r);
-t_vec3			ray_at(t_ray r, double t);
+unsigned int	color_to_rgba(t_color c, int samples_per_pixel);
+t_color			ray_color(t_master *m, t_ray *r);
+t_vec3			ray_at(t_ray *r, double t);
 
-bool hit_sphere(const t_sphere sphere, const t_ray r, double ray_tmin, double ray_tmax, t_hit *rec);
-bool hit(const t_ray r, double ray_tmin, double ray_tmax, t_hit *rec, t_vector spheres_vector);
+bool hit(t_ray *r, t_interval ray_t, t_hit *rec, t_vector spheres_vector);
+
 
 #endif

@@ -1,4 +1,4 @@
-#include "vec3.h"
+#include "miniRT.h"
 
 double	vec3length_squared(t_vec3 v)
 {
