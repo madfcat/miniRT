@@ -14,9 +14,18 @@ t_ray	init_ray(t_vec3 origin, t_vec3 direction)
 	return (ret);
 }
 
+double	linear_to_gamma(double linear_component)
+{
+	return (sqrt(linear_component));
+}
+
 unsigned int	color_to_rgba(t_color c, int samples_per_pixel)
 {
 	c = vec3_div_d(c, samples_per_pixel);
+
+	c.x = linear_to_gamma(c.x);
+	c.y = linear_to_gamma(c.y);
+	c.z = linear_to_gamma(c.z);
 
 	t_interval intensity = create_interval(0.000, 0.999);
 	return (lround(clamp(c.x, intensity) * 255) << 24 | lround(clamp(c.y, intensity) * 255) << 16
@@ -38,7 +47,7 @@ t_color	ray_color(t_master *m, t_ray *r, int depth)
 		// direction = random_on_hemisphere(&rec.normal);
 		direction = vec3_plus_vec3(rec.normal, random_unit_vector());
 		ray = init_ray(rec.p, direction);
-		return (vec3_times_d(ray_color(m, &ray, depth - 1), 0.5));
+		return (vec3_times_d(ray_color(m, &ray, depth - 1), 0.1));
 	}
 	unit_direction = unit_vector(r->direction);
 	a = 0.5 * (unit_direction.y + 1.0);
