@@ -29,6 +29,8 @@ void	init_camera(t_camera *c,
 	c->pixel00_loc = vec3_plus_vec3(viewport_upper_left,
 			vec3_times_d(vec3_plus_vec3(c->pixel_delta_v,
 					c->pixel_delta_u), 0.5));
+	c->samples_per_pixel = 100;
+	c->max_depth = 10;
 }
 
 /**
@@ -68,12 +70,13 @@ void	make_image(t_master *m, mlx_image_t *img)
 	t_ray		r;
 	int			i;
 	int			j;
-	int   		sample;
-	int    		samples_per_pixel = 300;
+	int			sample;
 	t_color 	pixel_color;
 
 
 	init_camera(&c, 1.0, 2.0);
+	c.samples_per_pixel = 100;
+	c.max_depth = 50;
 	i = 0;
 	j = 0;
 	while (i < WHEIGHT)
@@ -84,14 +87,14 @@ void	make_image(t_master *m, mlx_image_t *img)
 		{
 			pixel_color = init_vec3(0, 0, 0);
 			sample = 0;
-			while (sample < samples_per_pixel)
+			while (sample < c.samples_per_pixel)
 			{
 				r = get_ray(j, i, &c);
-				pixel_color = vec3_plus_vec3(pixel_color, ray_color(m, &r));
+				pixel_color = vec3_plus_vec3(pixel_color, ray_color(m, &r, c.max_depth));
 				sample++;
 			}
 
-			mlx_put_pixel(img, j, i, color_to_rgba(pixel_color, samples_per_pixel));
+			mlx_put_pixel(img, j, i, color_to_rgba(pixel_color, c.samples_per_pixel));
 			j++;
 		}
 		i++;

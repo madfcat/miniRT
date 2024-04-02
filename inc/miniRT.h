@@ -79,6 +79,8 @@ typedef struct s_camera
 	t_vec3		pixel_delta_u;
 	t_vec3		pixel_delta_v;
 	t_vec3		pixel00_loc;
+	int			samples_per_pixel;
+	int			max_depth;
 }	t_camera;
 
 typedef struct s_ambient
@@ -162,7 +164,7 @@ typedef struct s_ray
 
 t_ray			init_ray(t_vec3 origin, t_vec3 direction);
 unsigned int	color_to_rgba(t_color c, int samples_per_pixel);
-t_color			ray_color(t_master *m, t_ray *r);
+t_color			ray_color(t_master *m, t_ray *r, int depth);
 t_vec3			ray_at(t_ray *r, double t);
 
 bool hit(t_ray *r, t_interval ray_t, t_hit *rec, t_vector spheres_vector);
