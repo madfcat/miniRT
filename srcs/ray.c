@@ -35,7 +35,8 @@ t_color	ray_color(t_master *m, t_ray *r, int depth)
 		return (init_vec3(0, 0, 0));
 	if (hit(r, create_interval(0.001, INFINITY), &rec, m->sphere_vector))
 	{
-		direction = random_on_hemisphere(&rec.normal);
+		// direction = random_on_hemisphere(&rec.normal);
+		direction = vec3_plus_vec3(rec.normal, random_unit_vector());
 		ray = init_ray(rec.p, direction);
 		return (vec3_times_d(ray_color(m, &ray, depth - 1), 0.5));
 	}

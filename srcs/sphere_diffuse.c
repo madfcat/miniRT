@@ -6,13 +6,14 @@ t_vec3	random_in_unit_sphere(void)
 
 	while (true)
 	{
-		p = random_vec3(-1, 1);
+		p = random_vec3_range(-1, 1);
 		if (vec3length_squared(p) < 1)
 			return (p);
 	}
 }
 
-t_vec3	random_unit_vector(void) {
+t_vec3	random_unit_vector(void)
+{
 	return (unit_vector(random_in_unit_sphere()));
 }
 

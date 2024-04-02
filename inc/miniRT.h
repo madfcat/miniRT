@@ -64,7 +64,9 @@ double	vec3length(t_vec3 u);
 double	vec3length_squared(t_vec3 u);
 double	dot(t_vec3 u, t_vec3 v);
 t_vec3	init_vec3(double x, double y, double z);
-t_vec3	random_vec3();
+t_vec3	random_vec3(void);
+t_vec3	random_vec3_range(double min, double max);
+t_vec3	random_unit_vector(void);
 
 /*miniRT*/
 
