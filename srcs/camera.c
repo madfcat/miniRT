@@ -5,7 +5,7 @@ void	setup_camera(t_camera *c)
 	c->lookfrom = create_vec3(-2, 2, 1);
 	c->lookat = create_vec3(0, 0, -1);
 	c->vup = create_vec3(0, 1, 0);
-	c->samples_per_pixel = 100;
+	c->samples_per_pixel = 20;
 	c->max_depth = 50;
 	c->vfov = 20;
 }

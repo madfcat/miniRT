@@ -108,6 +108,20 @@ bool		scatter_lambertian(t_ray *r_in, t_hit *rec, t_color *attenuation, t_ray *s
 bool		scatter_metal(t_ray *r_in, t_hit *rec, t_color *attenuation, t_ray *scattered);
 
 
+/* Textures */
+
+typedef struct	s_texture
+{
+	t_color	color_value;
+}	t_texture;
+
+typedef struct s_checker_texture
+{
+	double	inv_scale;
+	t_texture	*even;
+	t_texture	*odd;
+}	t_checker_texture;
+
 /* Objects */
 
 typedef struct s_camera
@@ -148,15 +162,19 @@ typedef struct s_light
 	t_vec3	brightness;
 }	t_light;
 
+
+/* Hit record */
+
 typedef struct s_hit
 {
 	t_point3	p;
 	t_vec3		normal;
 	double		t;
+	double		u;
+	double		v;
 	bool		front_face;
 	t_material	*mat;
 }	t_hit;
-
 
 /* Sphere */
 
@@ -170,6 +188,7 @@ typedef struct s_sphere
 }	t_sphere;
 
 t_vec3	random_on_hemisphere(t_vec3 *normal);
+void	get_sphere_uv(t_vec3 p, double *u, double *v);
 
 typedef struct s_plane
 {

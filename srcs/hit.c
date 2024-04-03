@@ -36,6 +36,7 @@ bool	hit_sphere(t_sphere sphere, t_ray *r, t_interval ray_t, t_hit *rec)
 	rec->p = ray_at(r, rec->t);
 	t_vec3 outward_normal = vec3_div_d(vec3_minus_vec3(rec->p, sphere.center), sphere.radius);
 	set_face_normal(r, outward_normal, rec);
+	get_sphere_uv(outward_normal, &rec->u, &rec->v);
 	rec->mat = sphere.mat;
 
 	return (true);
