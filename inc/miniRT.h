@@ -125,6 +125,8 @@ typedef struct s_camera
 	t_vec3		w;
 }	t_camera;
 
+void	init_camera(t_camera *c);
+
 typedef struct s_ambient
 {
 	double	brightness;
@@ -213,6 +215,12 @@ t_color			ray_color(t_master *m, t_ray *r, int depth);
 t_vec3			ray_at(t_ray *r, double t);
 
 bool hit(t_ray *r, t_interval ray_t, t_hit *rec, t_vector spheres_vector);
+
+/* Render */
+int	render(t_master *m);
+
+/* Errors */
+int	ft_error(void);
 
 
 #endif

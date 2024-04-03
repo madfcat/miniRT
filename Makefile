@@ -11,12 +11,14 @@ LIBS = $(MLX)
 INCLUDES = -I ./inc/ -I $(LIBMLX)/include/MLX42
 
 SRCS = $(addprefix srcs/, \
+	camera.c \
 	hit.c \
 	interval.c \
 	main.c \
 	material.c \
 	utilities.c \
 	ray.c \
+	render.c \
 	sphere_diffuse.c \
 	vec3a.c \
 	vec3b.c \
