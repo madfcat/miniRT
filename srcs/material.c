@@ -1,6 +1,6 @@
 #include "miniRT.h"
 
-t_material create_material(t_color albedo, double fuzz, Scatter scatter)
+t_material create_material(t_color albedo, double fuzz, t_scatter scatter)
 {
 	t_material mat;
 

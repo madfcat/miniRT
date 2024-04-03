@@ -15,7 +15,9 @@
 /* Utilities */
 
 double	degrees_to_radians(double degrees);
-double	random_double();
+double	random_double(void);
+double	random_double_range(double min, double max);
+
 
 /* Interval */
 
@@ -29,6 +31,7 @@ t_interval	create_interval( double min, double max);
 bool		interval_surrounds(double x, t_interval interval);
 double		clamp(double x, t_interval interval);
 
+
 /* Vector Array */
 
 typedef struct s_vector
@@ -41,6 +44,7 @@ typedef struct s_vector
 
 void push_back(t_vector *vec, void *value);
 void init_vector(t_vector *vec, int initial_size, int element_size);
+
 
 /* Vec3 */
 
@@ -70,16 +74,18 @@ t_vec3	random_vec3_range(double min, double max);
 t_vec3	random_unit_vector(void);
 bool	near_zero(t_vec3 v);
 
+
 /* Materials */
-typedef struct s_ray t_ray;
-typedef struct s_hit t_hit;
-typedef bool (*Scatter)(t_ray *, t_hit *, t_color *, t_ray *);
+
+typedef struct	s_ray t_ray;
+typedef struct	s_hit t_hit;
+typedef bool	(*t_scatter)(t_ray *, t_hit *, t_color *, t_ray *);
 
 typedef struct	s_material
 {
 	t_color		albedo;
 	double		fuzz;
-	Scatter		scatter;
+	t_scatter	scatter;
 }	t_material;
 
 
@@ -96,10 +102,11 @@ typedef struct	s_metal
 typedef struct s_ray t_ray;
 typedef struct s_hit t_hit;
 
-t_material	create_material(t_color albedo, double fuzz, Scatter scatter);
+t_material	create_material(t_color albedo, double fuzz, t_scatter scatter);
 void		init_material(t_material *mat, t_material mat2);
 bool		scatter_lambertian(t_ray *r_in, t_hit *rec, t_color *attenuation, t_ray *scattered);
 bool		scatter_metal(t_ray *r_in, t_hit *rec, t_color *attenuation, t_ray *scattered);
+
 
 /* Objects */
 
@@ -201,26 +208,31 @@ typedef struct s_master
 	t_cylinder	*cylinders;
 }	t_master;
 
+
 /* Ray */
 
 typedef struct s_ray
 {
 	t_vec3	origin;
 	t_vec3	direction;
-} t_ray;
+}	t_ray;
 
 t_ray			create_ray(t_vec3 origin, t_vec3 direction);
 unsigned int	color_to_rgba(t_color c, int samples_per_pixel);
 t_color			ray_color(t_master *m, t_ray *r, int depth);
 t_vec3			ray_at(t_ray *r, double t);
 
-bool hit(t_ray *r, t_interval ray_t, t_hit *rec, t_vector spheres_vector);
+bool	hit(t_ray *r, t_interval ray_t, t_hit *rec, t_vector spheres_vector);
+
 
 /* Render */
-int	render(t_master *m);
+
+int		render(t_master *m);
+
 
 /* Errors */
-int	ft_error(void);
+
+int		ft_error(void);
 
 
 #endif

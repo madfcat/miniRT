@@ -12,8 +12,8 @@ t_vec3	random_vec3(void)
 
 t_vec3	random_vec3_range(double min, double max)
 {
-	return (create_vec3(random_double(min, max),
-			random_double(min, max), random_double(min, max)));
+	return (create_vec3(random_double_range(min, max),
+			random_double_range(min, max), random_double_range(min, max)));
 }
 
 /**
