@@ -38,7 +38,7 @@ bool	hit_sphere(t_sphere sphere, t_ray *r, t_interval ray_t, t_hit *rec)
 	set_face_normal(r, outward_normal, rec);
 	get_sphere_uv(outward_normal, &rec->u, &rec->v);
 	rec->mat = sphere.mat;
-
+	rec->texture = sphere.texture;
 	return (true);
 }
 

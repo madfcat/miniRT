@@ -15,19 +15,21 @@ void	init_spheres(t_master *m, int size)
 	(&(m->sphere_vector))->element_size = sizeof(t_sphere);
 }
 
-t_sphere	create_sphere(t_vec3 center, double radius, t_material mat)
+t_sphere	create_sphere(t_vec3 center, double radius, t_material *mat, t_texture *texture)
 {
 	t_sphere	sphere;
 
 	sphere.center = center;
 	sphere.radius = radius;
-	sphere.mat = (t_material *)malloc(sizeof(t_material));
-	if (sphere.mat == NULL)
-	{
-		perror("Memory allocation failed\n");
-		exit(1);
-	}
-	init_material(sphere.mat, mat);
+	// sphere.mat = (t_material *)malloc(sizeof(t_material));
+	// if (sphere.mat == NULL)
+	// {
+	// 	perror("Memory allocation failed\n");
+	// 	exit(1);
+	// }
+	// init_material(sphere.mat, mat);
+	sphere.mat = mat;
+	sphere.texture = texture;
 	return (sphere);
 }
 /**
@@ -45,6 +47,7 @@ int	main(void)
 	t_material	ground_material;
 	t_sphere	center_sphere;
 	t_material	center_material;
+	t_texture	center_texture;
 	t_sphere	left_sphere;
 	t_material	left_material;
 	t_sphere	right_sphere;
@@ -57,15 +60,18 @@ int	main(void)
 			&scatter_lambertian);
 	ground_sphere = create_sphere(create_vec3(0.0, -100.5, -1.0),
 			100,
-			ground_material);
+			&ground_material,
+			NULL);
 	push_back(&(m.sphere_vector), &ground_sphere);
 
+	center_texture = create_texture(CHECKERED, create_vec3(0.2, 0.3, 0.1), create_vec3(0.9, 0.9, 0.9), 50);
 	center_material = create_material(create_vec3(0.7, 0.3, 0.3),
 			0.0,
 			&scatter_lambertian);
 	center_sphere = create_sphere(create_vec3(0.0, 0.0, -1.0),
 			0.5,
-			center_material);
+			&center_material,
+			&center_texture);
 	push_back(&(m.sphere_vector), &center_sphere);
 
 	left_material = create_material(create_vec3(0.8, 0.8, 0.8),
@@ -73,7 +79,8 @@ int	main(void)
 			&scatter_metal);
 	left_sphere = create_sphere(create_vec3(-1.0, 0.0, -1.0),
 			0.5,
-			left_material);
+			&left_material,
+			NULL);
 	push_back(&(m.sphere_vector), &left_sphere);
 
 	right_material = create_material(create_vec3(0.8, 0.6, 0.2),
@@ -81,15 +88,15 @@ int	main(void)
 			&scatter_metal);
 	right_sphere = create_sphere(create_vec3(1.0, 0.0, -1.0),
 			0.5,
-			right_material);
+			&right_material,
+			NULL);
 	push_back(&(m.sphere_vector), &right_sphere);
 
 	render(&m);
-
-	destroy_sphere(&ground_sphere);
-	destroy_sphere(&center_sphere);
-	destroy_sphere(&left_sphere);
-	destroy_sphere(&right_sphere);
-
+	free(m.sphere_vector.data);
+	// destroy_sphere(&ground_sphere);
+	// destroy_sphere(&center_sphere);
+	// destroy_sphere(&left_sphere);
+	// destroy_sphere(&right_sphere);
 	return (0);
 }

@@ -40,21 +40,18 @@ void get_sphere_uv(t_vec3 p, double *u, double *v)
 	*v = theta / M_PI;
 }
 
-t_color checker_value(double u, double v, const t_point3 p) {
-	(void)p;
-	double inv_scale = 25;
+t_color checker_value(t_hit *rec)
+{
 
-	double checker_u = u * inv_scale * 2;
-	double checker_v = v * inv_scale;
+	double checker_u = rec->u * rec->texture->inv_scale * 2;
+	double checker_v = rec->v * rec->texture->inv_scale;
 
 	int x_integer = floor(checker_u);
 	int y_integer = floor(checker_v);
 
 	bool isEven = (x_integer + y_integer) % 2 == 0;
 
-	return isEven ? create_vec3(0.7, 0.3, 0.3) : create_vec3(0.3, 0.9, 0.1);
-
-	// return (create_vec3(0.7, 0.3, 0.3));
+	return isEven ? rec->texture->color_value_1 : rec->texture->color_value_2;
 }
 
 bool	scatter_lambertian(t_ray *r_in, t_hit *rec, t_color *attenuation, t_ray *scattered)
@@ -66,8 +63,10 @@ bool	scatter_lambertian(t_ray *r_in, t_hit *rec, t_color *attenuation, t_ray *sc
 	if (near_zero(scatter_direction))
 		scatter_direction = rec->normal;
 	*scattered = create_ray(rec->p, scatter_direction);
-	// *attenuation = rec->mat->albedo;
-	*attenuation = checker_value(rec->u, rec->v, rec->p);
+	if (rec->texture == NULL)
+		*attenuation = rec->mat->albedo;
+	else 
+		*attenuation = checker_value(rec);
 	return (true);
 }
 

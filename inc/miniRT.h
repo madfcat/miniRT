@@ -110,9 +110,18 @@ bool		scatter_metal(t_ray *r_in, t_hit *rec, t_color *attenuation, t_ray *scatte
 
 /* Textures */
 
+typedef enum e_texture_type
+{
+	SOLID,
+	CHECKERED
+}	t_texture_type;
+
 typedef struct	s_texture
 {
-	t_color	color_value;
+	t_texture_type	type;
+	t_color			color_value_1;
+	t_color			color_value_2;
+	double			inv_scale;
 }	t_texture;
 
 typedef struct s_checker_texture
@@ -121,6 +130,9 @@ typedef struct s_checker_texture
 	t_texture	*even;
 	t_texture	*odd;
 }	t_checker_texture;
+
+t_texture	create_texture(t_texture_type type, t_color color_value_1,
+		t_color color_value_2, double inv_scale);
 
 /* Objects */
 
@@ -174,6 +186,7 @@ typedef struct s_hit
 	double		v;
 	bool		front_face;
 	t_material	*mat;
+	t_texture	*texture;
 }	t_hit;
 
 /* Sphere */
@@ -185,6 +198,7 @@ typedef struct s_sphere
 	double			radius;
 	t_color			color;
 	t_material		*mat;
+	t_texture		*texture;
 }	t_sphere;
 
 t_vec3	random_on_hemisphere(t_vec3 *normal);

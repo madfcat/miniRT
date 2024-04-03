@@ -20,6 +20,7 @@ SRCS = $(addprefix srcs/, \
 	ray.c \
 	render.c \
 	sphere_diffuse.c \
+	texture.c \
 	vec3a.c \
 	vec3b.c \
 	vec3c.c \
