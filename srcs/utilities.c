@@ -12,6 +12,7 @@ double	random_double()
 {
 	return (rand() / (RAND_MAX + 1.0));
 }
+
 /**
  * Returns a random double between min and max
 */

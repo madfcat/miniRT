@@ -9,7 +9,7 @@ void	set_face_normal(const t_ray *r, const t_vec3 outward_normal, t_hit *rec)
 		rec->normal = vec3_minus_vec3(create_vec3(0, 0, 0), outward_normal);
 }
 
-bool hit_sphere(t_sphere sphere, t_ray *r, t_interval ray_t, t_hit *rec)
+bool	hit_sphere(t_sphere sphere, t_ray *r, t_interval ray_t, t_hit *rec)
 {
 	double	a;
 	double	half_b;
@@ -25,7 +25,7 @@ bool hit_sphere(t_sphere sphere, t_ray *r, t_interval ray_t, t_hit *rec)
 	if (discriminant < 0)
 		return (false);
 
-	root = (-half_b - sqrt(discriminant)) / a;;
+	root = (-half_b - sqrt(discriminant)) / a;
 	if (!interval_surrounds(root, ray_t))
 	{
 		root = (-half_b + sqrt(discriminant)) / a;
@@ -43,12 +43,12 @@ bool hit_sphere(t_sphere sphere, t_ray *r, t_interval ray_t, t_hit *rec)
 
 // TODO: redo for the objects.
 // Now works for spheres
-bool hit(t_ray *r, t_interval ray_t, t_hit *rec, t_vector spheres_vector)
+bool	hit(t_ray *r, t_interval ray_t, t_hit *rec, t_vector spheres_vector)
 {
-	t_hit temp_rec;
-	bool hit_anything;
-	double closest_so_far;
-	int i;
+	t_hit	temp_rec;
+	bool	hit_anything;
+	double	closest_so_far;
+	int		i;
 
 	hit_anything = false;
 	closest_so_far = ray_t.max;

@@ -10,9 +10,7 @@ int	ft_error(void)
 */
 void	init_spheres(t_master *m, int size)
 {
-	// m->spheres = (t_sphere *)malloc(size * sizeof(t_sphere));
 	(m->sphere_vector).data = (t_sphere *)malloc(size * sizeof(t_sphere));
-	// m->spheres = (&(m->sphere_vector))->data;
 	(&(m->sphere_vector))->size = 0;
 	(&(m->sphere_vector))->element_size = sizeof(t_sphere);
 }
@@ -23,8 +21,9 @@ t_sphere	create_sphere(t_vec3 center, double radius, t_material mat)
 
 	sphere.center = center;
 	sphere.radius = radius;
-		sphere.mat = (t_material*)malloc(sizeof(t_material)); // Allocate memory for t_material
-	if (sphere.mat == NULL) {
+	sphere.mat = (t_material *)malloc(sizeof(t_material));
+	if (sphere.mat == NULL)
+	{
 		perror("Memory allocation failed\n");
 		exit(1);
 	}
@@ -54,35 +53,35 @@ int	main(void)
 	init_spheres(&m, 20);
 
 	ground_material = create_material(create_vec3(0.8, 0.8, 0.0),
-		0.0,
-		&scatter_lambertian);
+			0.0,
+			&scatter_lambertian);
 	ground_sphere = create_sphere(create_vec3(0.0, -100.5, -1.0),
-		100,
-		ground_material);
+			100,
+			ground_material);
 	push_back(&(m.sphere_vector), &ground_sphere);
 
 	center_material = create_material(create_vec3(0.7, 0.3, 0.3),
-		0.0,
-		&scatter_lambertian);
-	center_sphere = create_sphere(create_vec3(0.0, 0.0, -1.0), 
-		0.5,
-		center_material);
+			0.0,
+			&scatter_lambertian);
+	center_sphere = create_sphere(create_vec3(0.0, 0.0, -1.0),
+			0.5,
+			center_material);
 	push_back(&(m.sphere_vector), &center_sphere);
 
 	left_material = create_material(create_vec3(0.8, 0.8, 0.8),
-		0.3,
-		&scatter_metal);
+			0.3,
+			&scatter_metal);
 	left_sphere = create_sphere(create_vec3(-1.0, 0.0, -1.0),
-		0.5,
-		left_material);
+			0.5,
+			left_material);
 	push_back(&(m.sphere_vector), &left_sphere);
 
 	right_material = create_material(create_vec3(0.8, 0.6, 0.2),
-		0.5,
-		&scatter_metal);
+			0.5,
+			&scatter_metal);
 	right_sphere = create_sphere(create_vec3(1.0, 0.0, -1.0),
-		0.5,
-		right_material);
+			0.5,
+			right_material);
 	push_back(&(m.sphere_vector), &right_sphere);
 
 	render(&m);

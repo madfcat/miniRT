@@ -1,6 +1,6 @@
 #include "miniRT.h"
 
-void init_vector(t_vector *vec, int initial_capacity, int element_size)
+void	init_vector(t_vector *vec, int initial_capacity, int element_size)
 {
 	vec->data = malloc(initial_capacity * element_size);
 	if (vec->data == NULL)
@@ -14,9 +14,9 @@ void init_vector(t_vector *vec, int initial_capacity, int element_size)
 }
 
 // Function to add an element to the end of the vector
-void push_back(t_vector *vec, void *value)
+void	push_back(t_vector *vec, void *value)
 {
-	void *new_data;
+	void	*new_data;
 
 	new_data = NULL;
 	if (vec->size == vec->capacity)

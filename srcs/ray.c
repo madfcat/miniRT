@@ -37,8 +37,6 @@ t_color	ray_color(t_master *m, t_ray *r, int depth)
 	t_vec3	unit_direction;
 	double	a;
 	t_hit	rec;
-	// t_vec3	direction;
-	// t_ray	ray;
 	t_ray	scattered;
 	t_color	attenuation;
 
