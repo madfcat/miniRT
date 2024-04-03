@@ -15,13 +15,13 @@ void	init_camera(t_camera *c,
 	// focal_length = 1.0;
 	// viewport_height = 2.0;
 	viewport_width = viewport_height * (WWIDTH * 1.0) / (WHEIGHT * 1.0);
-	c->camera_center = init_vec3(0, 0, 0);
-	c->viewport_u = init_vec3(viewport_width, 0, 0);
-	c->viewport_v = init_vec3(0, viewport_height * -1.0, 0);
+	c->camera_center = create_vec3(0, 0, 0);
+	c->viewport_u = create_vec3(viewport_width, 0, 0);
+	c->viewport_v = create_vec3(0, viewport_height * -1.0, 0);
 	c->pixel_delta_u = vec3_div_d(c->viewport_u, WWIDTH * 1.0);
 	c->pixel_delta_v = vec3_div_d(c->viewport_v, WHEIGHT * 1.0);
 	viewport_upper_left = vec3_minus_vec3(c->camera_center,
-			init_vec3(0, 0, focal_length));
+			create_vec3(0, 0, focal_length));
 	viewport_upper_left = vec3_minus_vec3(viewport_upper_left,
 			vec3_times_d(c->viewport_v, 0.5));
 	viewport_upper_left = vec3_minus_vec3(viewport_upper_left,
@@ -64,6 +64,21 @@ t_ray	get_ray(int j, int i, t_camera *c)
 	return (r);
 }
 
+void progress_bar(int i)
+{
+	int times;
+
+	if (i == 0)
+	{
+		times = WHEIGHT / 100;
+		while(times-- >= 0)
+			write(1, "#", 1);
+		write(1, "\n", 1);
+	}
+	if (i % 100 == 0)
+		write(1, "X", 1);
+}
+
 void	make_image(t_master *m, mlx_image_t *img)
 {
 	t_camera	c;
@@ -81,11 +96,10 @@ void	make_image(t_master *m, mlx_image_t *img)
 	j = 0;
 	while (i < WHEIGHT)
 	{
-		if (i % 100 == 0)
-			printf("X");
+		progress_bar(i);
 		while (j < WWIDTH)
 		{
-			pixel_color = init_vec3(0, 0, 0);
+			pixel_color = create_vec3(0, 0, 0);
 			sample = 0;
 			while (sample < c.samples_per_pixel)
 			{
@@ -133,22 +147,65 @@ void	init_spheres(t_master *m, int size)
 	(&(m->sphere_vector))->element_size = sizeof(t_sphere);
 }
 
+t_sphere	create_sphere(t_vec3 center, double radius, t_color albedo, Scatter scatter)
+{
+	t_sphere	sphere;
+
+	sphere.center = center;
+	sphere.radius = radius;
+	(void)albedo;
+		sphere.mat = (t_material*)malloc(sizeof(t_material)); // Allocate memory for t_material
+	if (sphere.mat == NULL) {
+		perror("Memory allocation failed\n");
+		exit(1);
+	}
+	init_material(sphere.mat, albedo, scatter);
+	return (sphere);
+}
+
+void	destroy_sphere(t_sphere *sphere)
+{
+	free(sphere->mat);
+}
+
 int	main(void)
 {
 	t_master	m;
-	t_sphere	first_sphere;
-	t_sphere	second_sphere;
+	t_sphere	ground_sphere;
+	t_sphere	center_sphere;
+	t_sphere	left_sphere;
+	t_sphere	right_sphere;
 
-	first_sphere.center = init_vec3(0, 0, -1.0);
-	first_sphere.radius = 0.5;
 	init_spheres(&m, 20);
-	push_back(&(m.sphere_vector), &first_sphere);
-	// ((t_sphere *)m.sphere_vector.data)[m.sphere_vector.size++] = first_sphere;
 
-	second_sphere.center = init_vec3(0, -100.5, -1);
-	second_sphere.radius = 100;
-	push_back(&(m.sphere_vector), &second_sphere);
+	ground_sphere = create_sphere(create_vec3(0.0, -100.5, -1.0),
+		100,
+		create_vec3(0.8, 0.8, 0.0), &scatter_lambertian);
+	push_back(&(m.sphere_vector), &ground_sphere);
+
+	center_sphere = create_sphere(create_vec3(0.0, 0.3, -1.0), 
+		0.5,
+		create_vec3(0.7, 0.3, 0.3), &scatter_metal);
+	push_back(&(m.sphere_vector), &center_sphere);
+
+	left_sphere = create_sphere(create_vec3(-0.3, 0.0, -1.0),
+		0.5,
+		create_vec3(0.8, 0.8, 0.8), &scatter_lambertian);
+	push_back(&(m.sphere_vector), &left_sphere);
+
+	right_sphere = create_sphere(create_vec3(1.0, 0.0, -1.0),
+		0.5,
+		create_vec3(0.8, 0.6, 0.2), &scatter_lambertian);
+	push_back(&(m.sphere_vector), &right_sphere);
+
+
 
 	render(&m);
+
+	destroy_sphere(&ground_sphere);
+	destroy_sphere(&center_sphere);
+	destroy_sphere(&left_sphere);
+	destroy_sphere(&right_sphere);
+
 	return (0);
 }

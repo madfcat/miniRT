@@ -6,7 +6,7 @@ void	set_face_normal(const t_ray *r, const t_vec3 outward_normal, t_hit *rec)
 	if (rec->front_face)
 		rec->normal = outward_normal;
 	else
-		rec->normal = vec3_minus_vec3(init_vec3(0, 0, 0), outward_normal);
+		rec->normal = vec3_minus_vec3(create_vec3(0, 0, 0), outward_normal);
 }
 
 bool hit_sphere(t_sphere sphere, t_ray *r, t_interval ray_t, t_hit *rec)
@@ -36,6 +36,7 @@ bool hit_sphere(t_sphere sphere, t_ray *r, t_interval ray_t, t_hit *rec)
 	rec->p = ray_at(r, rec->t);
 	t_vec3 outward_normal = vec3_div_d(vec3_minus_vec3(rec->p, sphere.center), sphere.radius);
 	set_face_normal(r, outward_normal, rec);
+	rec->mat = sphere.mat;
 
 	return (true);
 }

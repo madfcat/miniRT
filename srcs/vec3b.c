@@ -25,7 +25,7 @@ t_vec3	unit_vector(t_vec3 v)
 	return (vec3_div_d(v, vec3length(v)));
 }
 
-t_vec3	init_vec3(double x, double y, double z)
+t_vec3	create_vec3(double x, double y, double z)
 {
 	t_vec3	ret;
 

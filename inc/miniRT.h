@@ -4,6 +4,7 @@
 # include "MLX42.h"
 # include <math.h>
 # include <stdlib.h>
+# include <unistd.h>
 # include <string.h> // change this to libft to use memcpy
 // TODO: remove this header
 # include <stdio.h>
@@ -63,12 +64,43 @@ t_vec3	unit_vector(t_vec3 v);
 double	vec3length(t_vec3 u);
 double	vec3length_squared(t_vec3 u);
 double	dot(t_vec3 u, t_vec3 v);
-t_vec3	init_vec3(double x, double y, double z);
+t_vec3	create_vec3(double x, double y, double z);
 t_vec3	random_vec3(void);
 t_vec3	random_vec3_range(double min, double max);
 t_vec3	random_unit_vector(void);
+bool	near_zero(t_vec3 v);
 
-/*miniRT*/
+/* Materials */
+typedef struct s_ray t_ray;
+typedef struct s_hit t_hit;
+typedef bool (*Scatter)(t_ray *, t_hit *, t_color *, t_ray *);
+
+typedef struct	s_material
+{
+	t_color	albedo;
+	Scatter scatter;
+}	t_material;
+
+
+typedef struct	s_lambertian
+{
+	t_color	albedo;
+}	t_lambertian;
+
+typedef struct	s_metal
+{
+	t_color	albedo;
+}	t_metal;
+
+typedef struct s_ray t_ray;
+typedef struct s_hit t_hit;
+
+t_material	create_material(t_color albedo, Scatter scatter);
+void		init_material(t_material *mat, t_color albedo, Scatter scatter);
+bool		scatter_lambertian(t_ray *r_in, t_hit *rec, t_color *attenuation, t_ray *scattered);
+bool		scatter_metal(t_ray *r_in, t_hit *rec, t_color *attenuation, t_ray *scattered);
+
+/* Objects */
 
 typedef struct s_camera
 {
@@ -105,7 +137,9 @@ typedef struct s_hit
 	t_vec3		normal;
 	double		t;
 	bool		front_face;
+	t_material	*mat;
 }	t_hit;
+
 
 /* Sphere */
 
@@ -115,6 +149,7 @@ typedef struct s_sphere
 	t_point3		center;
 	double			radius;
 	t_color			color;
+	t_material		*mat;
 }	t_sphere;
 
 t_vec3	random_on_hemisphere(t_vec3 *normal);
@@ -164,7 +199,7 @@ typedef struct s_ray
 	t_vec3	direction;
 } t_ray;
 
-t_ray			init_ray(t_vec3 origin, t_vec3 direction);
+t_ray			create_ray(t_vec3 origin, t_vec3 direction);
 unsigned int	color_to_rgba(t_color c, int samples_per_pixel);
 t_color			ray_color(t_master *m, t_ray *r, int depth);
 t_vec3			ray_at(t_ray *r, double t);

@@ -14,6 +14,7 @@ SRCS = $(addprefix srcs/, \
 	hit.c \
 	interval.c \
 	main.c \
+	material.c \
 	utilities.c \
 	ray.c \
 	sphere_diffuse.c \
