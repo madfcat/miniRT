@@ -7,19 +7,29 @@ int	ft_error(void)
 // TODO: calculate focal_length from FOV angle
 
 void	init_camera(t_camera *c,
-			double focal_length, double viewport_height)
+			double focal_length,
+			double vfov)
 {
 	double	viewport_width;
 	t_vec3	viewport_upper_left;
 
 	// focal_length = 1.0;
 	// viewport_height = 2.0;
+	double theta = degrees_to_radians(vfov);
+	double h = tan(theta / 2);
+	double viewport_height = 2 * h * focal_length;
 	viewport_width = viewport_height * (WWIDTH * 1.0) / (WHEIGHT * 1.0);
 	c->camera_center = create_vec3(0, 0, 0);
+
+	// Calculate the vectors across the horizontal and down the vertical viewport edges.
 	c->viewport_u = create_vec3(viewport_width, 0, 0);
 	c->viewport_v = create_vec3(0, viewport_height * -1.0, 0);
+
+	// Calculate the horizontal and vertical delta vectors from pixel to pixel.
 	c->pixel_delta_u = vec3_div_d(c->viewport_u, WWIDTH * 1.0);
 	c->pixel_delta_v = vec3_div_d(c->viewport_v, WHEIGHT * 1.0);
+
+	// Calculate the location of the upper left pixel.
 	viewport_upper_left = vec3_minus_vec3(c->camera_center,
 			create_vec3(0, 0, focal_length));
 	viewport_upper_left = vec3_minus_vec3(viewport_upper_left,
@@ -29,8 +39,10 @@ void	init_camera(t_camera *c,
 	c->pixel00_loc = vec3_plus_vec3(viewport_upper_left,
 			vec3_times_d(vec3_plus_vec3(c->pixel_delta_v,
 					c->pixel_delta_u), 0.5));
+	
 	c->samples_per_pixel = 100;
 	c->max_depth = 10;
+	c->vfov = vfov;
 }
 
 /**
@@ -89,7 +101,7 @@ void	make_image(t_master *m, mlx_image_t *img)
 	t_color 	pixel_color;
 
 
-	init_camera(&c, 1.0, 2.0);
+	init_camera(&c, 1.0, 120);
 	c.samples_per_pixel = 100;
 	c.max_depth = 50;
 	i = 0;

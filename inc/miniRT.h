@@ -13,8 +13,8 @@
 
 
 /* Utilities */
-# define PI 3.1415926535897932385
 
+double	degrees_to_radians(double degrees);
 double	random_double();
 
 /* Interval */
@@ -116,6 +116,7 @@ typedef struct s_camera
 	t_vec3		pixel00_loc;
 	int			samples_per_pixel;
 	int			max_depth;
+	double		vfov;
 }	t_camera;
 
 typedef struct s_ambient
