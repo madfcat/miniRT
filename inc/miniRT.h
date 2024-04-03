@@ -77,8 +77,9 @@ typedef bool (*Scatter)(t_ray *, t_hit *, t_color *, t_ray *);
 
 typedef struct	s_material
 {
-	t_color	albedo;
-	Scatter scatter;
+	t_color		albedo;
+	double		fuzz;
+	Scatter		scatter;
 }	t_material;
 
 
@@ -95,8 +96,8 @@ typedef struct	s_metal
 typedef struct s_ray t_ray;
 typedef struct s_hit t_hit;
 
-t_material	create_material(t_color albedo, Scatter scatter);
-void		init_material(t_material *mat, t_color albedo, Scatter scatter);
+t_material	create_material(t_color albedo, double fuzz, Scatter scatter);
+void		init_material(t_material *mat, t_material mat2);
 bool		scatter_lambertian(t_ray *r_in, t_hit *rec, t_color *attenuation, t_ray *scattered);
 bool		scatter_metal(t_ray *r_in, t_hit *rec, t_color *attenuation, t_ray *scattered);
 
