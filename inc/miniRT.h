@@ -113,10 +113,16 @@ typedef struct s_camera
 	t_vec3		viewport_v;
 	t_vec3		pixel_delta_u;
 	t_vec3		pixel_delta_v;
-	t_vec3		pixel00_loc;
+	t_point3	pixel00_loc;
 	int			samples_per_pixel;
 	int			max_depth;
 	double		vfov;
+	t_point3	lookfrom;
+	t_point3	lookat;
+	t_vec3		vup;
+	t_vec3		u;
+	t_vec3		v;
+	t_vec3		w;
 }	t_camera;
 
 typedef struct s_ambient

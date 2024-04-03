@@ -7,23 +7,29 @@ int	ft_error(void)
 // TODO: calculate focal_length from FOV angle
 
 void	init_camera(t_camera *c,
-			double focal_length,
 			double vfov)
 {
 	double	viewport_width;
 	t_vec3	viewport_upper_left;
 
-	// focal_length = 1.0;
-	// viewport_height = 2.0;
+	// c->camera_center = create_vec3(0, 0, 0);
+	c->camera_center = c->lookfrom;
+
+	// Determine viewport dimensions
+	double focal_length = vec3length(vec3_minus_vec3(c->lookfrom, c->lookat));
 	double theta = degrees_to_radians(vfov);
 	double h = tan(theta / 2);
 	double viewport_height = 2 * h * focal_length;
 	viewport_width = viewport_height * (WWIDTH * 1.0) / (WHEIGHT * 1.0);
-	c->camera_center = create_vec3(0, 0, 0);
+
+	// Calculate the u,v,w unit basis vectors for the camera coordinate frame.
+	c->w = unit_vector(vec3_minus_vec3(c->lookfrom, c->lookat));
+	c->u = unit_vector(cross(c->vup, c->w));
+	c->v = cross(c->w, c->u);
 
 	// Calculate the vectors across the horizontal and down the vertical viewport edges.
-	c->viewport_u = create_vec3(viewport_width, 0, 0);
-	c->viewport_v = create_vec3(0, viewport_height * -1.0, 0);
+	c->viewport_u = vec3_times_d(c->u, viewport_width);
+	c->viewport_v = vec3_times_d(c->v, viewport_height * (-1));
 
 	// Calculate the horizontal and vertical delta vectors from pixel to pixel.
 	c->pixel_delta_u = vec3_div_d(c->viewport_u, WWIDTH * 1.0);
@@ -31,11 +37,11 @@ void	init_camera(t_camera *c,
 
 	// Calculate the location of the upper left pixel.
 	viewport_upper_left = vec3_minus_vec3(c->camera_center,
-			create_vec3(0, 0, focal_length));
+			vec3_times_d(c->viewport_u, 0.5));
 	viewport_upper_left = vec3_minus_vec3(viewport_upper_left,
 			vec3_times_d(c->viewport_v, 0.5));
 	viewport_upper_left = vec3_minus_vec3(viewport_upper_left,
-			vec3_times_d(c->viewport_u, 0.5));
+			vec3_times_d(c->w, focal_length));
 	c->pixel00_loc = vec3_plus_vec3(viewport_upper_left,
 			vec3_times_d(vec3_plus_vec3(c->pixel_delta_v,
 					c->pixel_delta_u), 0.5));
@@ -100,8 +106,14 @@ void	make_image(t_master *m, mlx_image_t *img)
 	int			sample;
 	t_color 	pixel_color;
 
-
-	init_camera(&c, 1.0, 120);
+	c.lookfrom = create_vec3(-2, 2, 1);
+	c.lookat = create_vec3(0, 0, -1);
+	c.vup = create_vec3(0, 1, 0);
+	init_camera(&c, 20);
+	// c.lookfrom = create_vec3(0, 0, -1);
+	// c.lookat = create_vec3(0, 0, 0);
+	// c.vup = create_vec3(0, 1, 0);
+	// init_camera(&c, 120);
 	c.samples_per_pixel = 100;
 	c.max_depth = 50;
 	i = 0;
@@ -147,6 +159,7 @@ int	render(t_master *m)
 	mlx_terminate(mlx);
 	return (0);
 }
+
 /**
  * Initializes sphere_vector in the master struct
 */
@@ -220,8 +233,8 @@ int	main(void)
 	push_back(&(m.sphere_vector), &left_sphere);
 
 	right_material = create_material(create_vec3(0.8, 0.6, 0.2),
-		0.0,
-		&scatter_lambertian);
+		0.5,
+		&scatter_metal);
 	right_sphere = create_sphere(create_vec3(1.0, 0.0, -1.0),
 		0.5,
 		right_material);
