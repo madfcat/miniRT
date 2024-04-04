@@ -80,6 +80,9 @@ bool	scatter_metal(t_ray *r_in, t_hit *rec, t_color *attenuation, t_ray *scatter
 
 	reflected = reflect(unit_vector(r_in->direction), rec->normal);
 	*scattered = create_ray(rec->p, vec3_plus_vec3(reflected, vec3_times_d(random_unit_vector(), rec->mat->fuzz)));
-	*attenuation = rec->mat->albedo;
+	if (rec->texture == NULL)
+		*attenuation = rec->mat->albedo;
+	else 
+		*attenuation = checker_value(rec);
 	return (dot(scattered->direction, rec->normal) > 0);
 }

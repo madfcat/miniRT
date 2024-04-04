@@ -42,7 +42,7 @@ t_color	ray_color(t_master *m, t_ray *r, int depth)
 
 	if (depth <= 0)
 		return (create_vec3(0, 0, 0));
-	if (hit(r, create_interval(0.001, INFINITY), &rec, m->sphere_vector))
+	if (hit(r, create_interval(0.001, INFINITY), &rec, m))
 	{
 		if (rec.mat->scatter(r, &rec, &attenuation, &scattered))
 			return (vec3_times_vec3(attenuation, ray_color(m, &scattered, depth - 1)));

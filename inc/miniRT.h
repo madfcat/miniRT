@@ -201,14 +201,17 @@ typedef struct s_sphere
 	t_texture		*texture;
 }	t_sphere;
 
-t_vec3	random_on_hemisphere(t_vec3 *normal);
-void	get_sphere_uv(t_vec3 p, double *u, double *v);
+t_vec3		random_on_hemisphere(t_vec3 *normal);
+void		get_sphere_uv(t_vec3 p, double *u, double *v);
+t_sphere	create_sphere(t_vec3 center, double radius, t_material *mat, t_texture *texture);
 
 typedef struct s_plane
 {
-	t_vec3	point;
-	t_vec3	normal;
-	t_color	color;
+	t_point3	point;
+	t_vec3		normal;
+	t_color		color;
+	t_material		*mat;
+	t_texture		*texture;
 }	t_plane;
 
 typedef struct s_cylinder
@@ -235,12 +238,13 @@ typedef struct s_master
 	t_light		*lights;
 	// t_sphere	*spheres;
 	t_vector	sphere_vector;
-	// t_sphere_vector	sphere_vector;
-	t_plane		*planes;
+	// t_plane		*planes;
+	t_vector	plane_vector;
 	t_cone		*cones;
 	t_cylinder	*cylinders;
 }	t_master;
 
+void	init_spheres(t_master *m, int size);
 
 /* Ray */
 
@@ -255,7 +259,7 @@ unsigned int	color_to_rgba(t_color c, int samples_per_pixel);
 t_color			ray_color(t_master *m, t_ray *r, int depth);
 t_vec3			ray_at(t_ray *r, double t);
 
-bool	hit(t_ray *r, t_interval ray_t, t_hit *rec, t_vector spheres_vector);
+bool	hit(t_ray *r, t_interval ray_t, t_hit *rec, t_master *m);
 
 
 /* Render */

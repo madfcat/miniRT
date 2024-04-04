@@ -44,7 +44,7 @@ bool	hit_sphere(t_sphere sphere, t_ray *r, t_interval ray_t, t_hit *rec)
 
 // TODO: redo for the objects.
 // Now works for spheres
-bool	hit(t_ray *r, t_interval ray_t, t_hit *rec, t_vector spheres_vector)
+bool	hit(t_ray *r, t_interval ray_t, t_hit *rec, t_master *m)
 {
 	t_hit	temp_rec;
 	bool	hit_anything;
@@ -54,10 +54,10 @@ bool	hit(t_ray *r, t_interval ray_t, t_hit *rec, t_vector spheres_vector)
 	hit_anything = false;
 	closest_so_far = ray_t.max;
 	i = 0;
-	while (i < spheres_vector.size)
+	while (i < m->sphere_vector.size)
 	{
 
-		if (hit_sphere(((t_sphere *)(spheres_vector.data))[i], r, create_interval(ray_t.min, closest_so_far), &temp_rec))
+		if (hit_sphere(((t_sphere *)(m->sphere_vector.data))[i], r, create_interval(ray_t.min, closest_so_far), &temp_rec))
 		{
 			hit_anything = true;
 			closest_so_far = temp_rec.t;

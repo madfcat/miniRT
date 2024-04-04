@@ -5,41 +5,6 @@ int	ft_error(void)
 	return (1);
 }
 
-/**
- * Initializes sphere_vector in the master struct
-*/
-void	init_spheres(t_master *m, int size)
-{
-	(m->sphere_vector).data = (t_sphere *)malloc(size * sizeof(t_sphere));
-	(&(m->sphere_vector))->size = 0;
-	(&(m->sphere_vector))->element_size = sizeof(t_sphere);
-}
-
-t_sphere	create_sphere(t_vec3 center, double radius, t_material *mat, t_texture *texture)
-{
-	t_sphere	sphere;
-
-	sphere.center = center;
-	sphere.radius = radius;
-	// sphere.mat = (t_material *)malloc(sizeof(t_material));
-	// if (sphere.mat == NULL)
-	// {
-	// 	perror("Memory allocation failed\n");
-	// 	exit(1);
-	// }
-	// init_material(sphere.mat, mat);
-	sphere.mat = mat;
-	sphere.texture = texture;
-	return (sphere);
-}
-/**
- * Destroys sphere by freeing the material
-*/
-void	destroy_sphere(t_sphere *sphere)
-{
-	free(sphere->mat);
-}
-
 int	main(void)
 {
 	t_master	m;
@@ -64,23 +29,23 @@ int	main(void)
 			NULL);
 	push_back(&(m.sphere_vector), &ground_sphere);
 
-	center_texture = create_texture(CHECKERED, create_vec3(0.2, 0.3, 0.1), create_vec3(0.9, 0.9, 0.9), 50);
+	center_texture = create_texture(CHECKERED, create_vec3(0.9, 0.3, 0.1), create_vec3(0.9, 0.1, 0.0), 20);
 	center_material = create_material(create_vec3(0.7, 0.3, 0.3),
 			0.0,
 			&scatter_lambertian);
 	center_sphere = create_sphere(create_vec3(0.0, 0.0, -1.0),
 			0.5,
 			&center_material,
-			&center_texture);
+			NULL);
 	push_back(&(m.sphere_vector), &center_sphere);
 
 	left_material = create_material(create_vec3(0.8, 0.8, 0.8),
-			0.3,
+			0.1,
 			&scatter_metal);
 	left_sphere = create_sphere(create_vec3(-1.0, 0.0, -1.0),
 			0.5,
 			&left_material,
-			NULL);
+			&center_texture);
 	push_back(&(m.sphere_vector), &left_sphere);
 
 	right_material = create_material(create_vec3(0.8, 0.6, 0.2),

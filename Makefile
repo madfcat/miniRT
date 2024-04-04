@@ -16,11 +16,13 @@ SRCS = $(addprefix srcs/, \
 	interval.c \
 	main.c \
 	material.c \
-	utilities.c \
+	plane.c \
 	ray.c \
 	render.c \
+	sphere.c \
 	sphere_diffuse.c \
 	texture.c \
+	utilities.c \
 	vec3a.c \
 	vec3b.c \
 	vec3c.c \
