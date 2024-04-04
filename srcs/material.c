@@ -49,9 +49,11 @@ t_color checker_value(t_hit *rec)
 	int x_integer = floor(checker_u);
 	int y_integer = floor(checker_v);
 
-	bool isEven = (x_integer + y_integer) % 2 == 0;
+	bool is_even = (x_integer + y_integer) % 2 == 0;
 
-	return isEven ? rec->texture->color_value_1 : rec->texture->color_value_2;
+	if (is_even)
+		return (rec->texture->color_value_1);
+	return (rec->texture->color_value_2);
 }
 
 bool	scatter_lambertian(t_ray *r_in, t_hit *rec, t_color *attenuation, t_ray *scattered)
