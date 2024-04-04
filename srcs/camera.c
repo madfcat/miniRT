@@ -7,7 +7,7 @@ void	setup_camera(t_camera *c)
 	c->vup = create_vec3(0, 1, 0);
 	c->samples_per_pixel = 20; // 100 for better resolution, slower rendering
 	c->max_depth = 50;
-	c->vfov = 20;
+	c->vfov = 120;
 }
 
 void	init_camera(t_camera *c)

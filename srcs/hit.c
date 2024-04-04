@@ -42,6 +42,35 @@ bool	hit_sphere(t_sphere sphere, t_ray *r, t_interval ray_t, t_hit *rec)
 	return (true);
 }
 
+bool	hit_plane(t_plane plane, t_ray *r, t_interval ray_t, t_hit *rec)
+{
+	double	denominator;
+	double	numerator;
+	double	t;
+
+ 	// Calculate the denominator of the ray-plane intersection equation
+	denominator = dot(plane.normal, r->direction);
+	// Check if the ray is parallel or nearly parallel to the plane
+	if (fabs(denominator) < 0.0001)
+		return (false);
+	// Calculate the numerator of the ray-plane intersection equation
+	numerator = dot(vec3_minus_vec3(plane.point, r->origin), plane.normal);
+	 // Calculate the parameter 't' representing the intersection point along the ray
+	t = numerator / denominator;
+	// Check if the intersection point 't' is within the valid interval of the ray
+	if (!interval_surrounds(t, ray_t))
+		return (false);
+
+	rec->t = t;
+	// Calculate the intersection point 'p' using the ray equation
+	rec->p = ray_at(r, rec->t);
+	// Set the normal direction based on the ray direction and the plane normal
+	set_face_normal(r, plane.normal, rec); 
+	rec->mat = plane.mat;
+	rec->texture = plane.texture;
+	return (true);
+}
+
 // TODO: redo for the objects.
 // Now works for spheres
 bool	hit(t_ray *r, t_interval ray_t, t_hit *rec, t_master *m)
@@ -58,6 +87,17 @@ bool	hit(t_ray *r, t_interval ray_t, t_hit *rec, t_master *m)
 	{
 
 		if (hit_sphere(((t_sphere *)(m->sphere_vector.data))[i], r, create_interval(ray_t.min, closest_so_far), &temp_rec))
+		{
+			hit_anything = true;
+			closest_so_far = temp_rec.t;
+			*rec = temp_rec;
+		}
+		i++;
+	}
+	i = 0;
+	while (i < m->plane_vector.size)
+	{
+		if (hit_plane(((t_plane *)(m->plane_vector.data))[i], r, create_interval(ray_t.min, closest_so_far), &temp_rec))
 		{
 			hit_anything = true;
 			closest_so_far = temp_rec.t;

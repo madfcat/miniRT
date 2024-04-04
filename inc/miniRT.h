@@ -214,6 +214,8 @@ typedef struct s_plane
 	t_texture		*texture;
 }	t_plane;
 
+t_plane	create_plane(t_point3 point, t_vec3 normal, t_material *mat, t_texture *texture);
+
 typedef struct s_cylinder
 {
 	t_vec3	center;
@@ -245,6 +247,7 @@ typedef struct s_master
 }	t_master;
 
 void	init_spheres(t_master *m, int size);
+void	init_planes(t_master *m, int size);
 
 /* Ray */
 
